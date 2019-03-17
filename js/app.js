@@ -56,6 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
 		for (let i = 0; i < letters.length; i += 1) {
 			if (clickedButton === letters[i].textContent.toLowerCase()) {
 				letters[i].classList.add('show');
+				letters[i].classList.add('color');
+				letters[i].style.transition = 'all 1.5s';
+				letters[i].style.backgroundColor = '#5b85b7';
+				letters[i].style.color = 'white';
 				letterFound = true;
 			}
 		}
