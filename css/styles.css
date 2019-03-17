@@ -36,11 +36,23 @@ ul {
 	display: inline-block;
 }
 
+a {
+	text-decoration: none;
+}
+
 h2 {
 	margin: 0;
 	text-transform: uppercase;
 	font-family: 'Open Sans', sans-serif;
 	font-size: var(--font-size-large);
+	margin: 0;
+}
+
+h3 {
+	margin: 0;
+	text-transform: uppercase;
+	font-family: 'Open Sans', sans-serif;
+	font-size: var(--font-size-medium);
 	margin: 0;
 }
 
