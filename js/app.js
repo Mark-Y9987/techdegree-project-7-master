@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 	const qwerty = document.getElementById('qwerty');
 	const phrase = document.getElementById('phrase');
-	const missed = 0;
+	let missed = 0;
 	const startButton = document.querySelector('a');
 	const ul = phrase.firstElementChild;
 
@@ -23,7 +23,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	function getRandomPhraseAsArray(arr) {
 		const rand = arr[Math.floor(Math.random() * arr.length)];
-		const arrayOfCharacters = rand.split('');
+		return rand;
+	}
+
+	function splitRandomPhrase(arr) {
+		const arrayOfCharacters = arr.split('');
 		console.log(arrayOfCharacters);
 		return arrayOfCharacters;
 	}
@@ -46,43 +50,59 @@ document.addEventListener('DOMContentLoaded', () => {
 
 	// Check the user's button press against the given phrase. Reveal the letter if correct, return null if incorrect
 
-	// function contains(array, element) {
-	// 	for (let i = 0; i < array.length; i++) {
-	// 		if (array[i] === element) {
-	// 			return true;
-	// 		}
-	// 	}
-	// 	return false;
-	// }
-
-	// function checkLetter(clickedButton) {
-	// 	const letters = document.getElementsByClassName('letter');
-	// 	const includes = letters.contains(letters, clickedButton);
-	// 	console.log(includes);
-	// 	if (includes) {
-	// 		console.log('it worked');
-	// 		// let matchedLetters = letters.filter(filterLetters);
-	// 		// matchedLetters.className = 'show';
-	// 		// return matchedLetters;
-	// 	} else {
-	// 		console.log('no match');
-	// 	}
-	// }
-
-	// function checkLetter(clickedButton) {
-	// 	const letters = document.getElementsByClassName('letter');
-	// 	const matchedLetter = letters.filter(clickedButton);
-	// 	console.log(letters);
-	// 	console.log(matchedLetter);
-	// }
-
 	function checkLetter(clickedButton) {
 		const letters = document.getElementsByClassName('letter');
-		for (let i = 0; i < letters.length; i++) {
+		let letterFound = null;
+		for (let i = 0; i < letters.length; i += 1) {
 			if (clickedButton === letters[i].textContent.toLowerCase()) {
-				letters[i].className = 'show';
-				let matchedLetter = clickedButton.textContent;
+				letters[i].classList.add('show');
+				letterFound = true;
 			}
+		}
+		return letterFound;
+	}
+
+	// remove score function
+
+	function changeScore() {
+		let scoreboardList = document.querySelector('ol');
+		let heart = scoreboardList.querySelector('li:first-child'); // find first heart item
+		scoreboardList.removeChild(heart);
+	}
+
+	// Create new element
+
+	function addElement(winOrLose, text1, text2) {
+		// create a new div element
+		let element = document.createElement('div');
+		element.className = winOrLose;
+		element.id = 'overlay';
+		let newH2 = element.appendChild(document.createElement('h2'));
+		newH2.className = 'title';
+		newH2.style.margin = '0 auto';
+		newH2.textContent = text1;
+		let firstH3 = element.appendChild(document.createElement('h3'));
+		firstH3.className = 'title';
+		firstH3.style.margin = '0 auto';
+		firstH3.textContent = text2;
+		let reloadButton = element.appendChild(document.createElement('a'));
+		reloadButton.className = 'btn__reset';
+		reloadButton.textContent = 'Try Again';
+		reloadButton.setAttribute('href', 'javascript:location.reload(true)');
+		document.body.appendChild(element);
+	}
+
+	// Check win condition
+
+	function checkWin() {
+		let showClass = document.getElementsByClassName('show');
+		let lettersClass = document.getElementsByClassName('letter');
+		if (showClass.length == lettersClass.length && showClass.length > 0) {
+			console.log('you win');
+			addElement('win', `You Win!`, `"${phraseArray}" is correct! `);
+		} else if (missed == 5) {
+			console.log('you lose');
+			addElement('lose', 'Game Over!', 'Better luck next time!');
 		}
 	}
 
@@ -100,12 +120,24 @@ document.addEventListener('DOMContentLoaded', () => {
 	//  Randomly select an Array, then add the phrase from the array to the DOM
 
 	const phraseArray = getRandomPhraseAsArray(phrases);
-	addPhraseToDisplay(phraseArray);
+	const splitArray = splitRandomPhrase(phraseArray);
+	addPhraseToDisplay(splitArray);
 
 	// Listen to the user's key presses
 
 	qwerty.addEventListener('click', (e) => {
-		const button = e.target.textContent;
-		checkLetter(button);
+		if (e.target.matches('button')) {
+			const button = e.target;
+			const buttonText = button.textContent;
+			if (checkLetter(buttonText) == null) {
+				missed += 1;
+				changeScore();
+				button.classList.add('chosen');
+				console.log(missed);
+			} else {
+				button.classList.add('chosen');
+			}
+			checkWin();
+		}
 	});
 });
