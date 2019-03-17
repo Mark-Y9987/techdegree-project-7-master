@@ -181,3 +181,8 @@ button {
 .lose a {
 	color: var(--color-lose);
 }
+
+.color {
+	transition-property: background-color;
+	transition-property: text-color;
+}
