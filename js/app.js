@@ -137,9 +137,10 @@ document.addEventListener('DOMContentLoaded', () => {
 				missed += 1;
 				changeScore();
 				button.classList.add('chosen');
-				console.log(missed);
+				button.disabled = true;
 			} else {
 				button.classList.add('chosen');
+				button.disabled = true;
 			}
 			checkWin();
 		}
